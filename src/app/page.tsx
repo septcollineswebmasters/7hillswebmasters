@@ -1,6 +1,5 @@
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { HeroVisual } from "@/components/HeroVisual";
 import { LeadForms } from "@/components/LeadForms";
 import { siteConfig } from "@/lib/site";
 
@@ -43,20 +42,66 @@ export default function Home() {
       <Header />
 
       <main>
-        <section className="hill-pattern relative overflow-hidden pt-28 md:pt-32">
-          <div className="mx-auto max-w-6xl px-5 pb-10 md:px-8 md:pb-14">
-            <div className="reveal max-w-4xl">
-              <p className="font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl md:text-7xl">
+        <section className="relative min-h-[100svh] overflow-hidden pt-28 md:pt-32">
+          <div
+            className="pointer-events-none absolute inset-0"
+            aria-hidden="true"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(900px_520px_at_18%_12%,rgba(15,118,110,0.18),transparent_60%),radial-gradient(700px_420px_at_88%_18%,rgba(201,213,192,0.55),transparent_55%),linear-gradient(180deg,#e7f1f3_0%,#f7fafb_48%,#e6f0ec_100%)]" />
+            <svg
+              className="absolute inset-x-0 bottom-0 h-[48%] w-full md:h-[56%]"
+              viewBox="0 0 1440 420"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0 220C120 170 190 110 300 130C410 150 460 230 580 215C700 200 740 110 860 125C980 140 1030 220 1160 205C1290 190 1350 120 1440 150V420H0V220Z"
+                fill="#0f766e"
+                fillOpacity="0.18"
+              />
+              <path
+                d="M0 280C150 240 210 190 340 205C470 220 520 290 650 270C780 250 820 170 950 185C1080 200 1140 280 1270 260C1350 248 1400 220 1440 230V420H0V280Z"
+                fill="#122033"
+                fillOpacity="0.14"
+              />
+              <path
+                d="M0 340C160 310 230 280 360 295C490 310 540 360 670 345C800 330 850 270 980 285C1110 300 1180 355 1300 340C1370 330 1410 310 1440 315V420H0V340Z"
+                fill="#0f766e"
+                fillOpacity="0.28"
+              />
+              <path
+                className="chart-line"
+                d="M820 210 C900 195, 940 150, 1000 140 C1060 130, 1100 170, 1160 120 C1220 70, 1280 95, 1360 80"
+                fill="none"
+                stroke="#0f766e"
+                strokeWidth="4"
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+              <circle cx="1360" cy="80" r="7" fill="#0f766e" />
+              {[520, 610, 700, 790, 880, 970, 1060].map((x, i) => (
+                <circle
+                  key={x}
+                  cx={x}
+                  cy={200 - (i % 3) * 14}
+                  r="5"
+                  fill="#ffffff"
+                  fillOpacity="0.9"
+                />
+              ))}
+            </svg>
+          </div>
+
+          <div className="relative mx-auto flex min-h-[calc(100svh-7rem)] max-w-6xl flex-col justify-center px-5 pb-24 md:px-8">
+            <div className="reveal relative z-10 max-w-3xl">
+              <p className="font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-7xl">
                 7hillswebmasters
               </p>
-              <h1 className="mt-5 max-w-3xl text-2xl font-semibold leading-tight text-ink sm:text-3xl md:text-4xl">
+              <h1 className="mt-5 max-w-2xl text-2xl font-semibold leading-tight text-ink sm:text-3xl md:text-[2.15rem]">
                 The web analytics agency brands hire for GA4, GTM, and conversions that actually convert.
               </h1>
-              <p className="hero-lead aeo-answer mt-5 max-w-2xl text-lg text-ink-soft md:text-xl">
-                Over 10 years of specialized expertise in GA4, Google Tag Manager,
-                conversion tracking, pixel setup, CRO, GTM cleanup, and tracking
-                audits—delivering the best service at the best price for small
-                businesses through global companies.
+              <p className="hero-lead aeo-answer mt-5 max-w-xl text-lg text-ink-soft">
+                Over 10 years specializing in GA4, GTM, conversion tracking, pixels,
+                CRO, and tracking audits—best service, best price, for startups to enterprise.
               </p>
               <div className="reveal-delay-1 mt-8 flex flex-wrap gap-3">
                 <a href="#contact" className="btn-primary focus-ring">
@@ -66,10 +111,6 @@ export default function Home() {
                   Schedule a call
                 </a>
               </div>
-            </div>
-
-            <div className="reveal-delay-2 mt-12 md:mt-16">
-              <HeroVisual />
             </div>
           </div>
         </section>
