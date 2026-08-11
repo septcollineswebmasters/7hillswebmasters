@@ -19,11 +19,11 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Lead delivery
 
-Contact and Schedule a Call forms send to:
+Contact and Schedule a Call forms use **JavaScript `fetch`** to send submissions to:
 
 `septcollineswebmasters@gmail.com`
 
-Delivery uses [FormSubmit](https://formsubmit.co) from the browser. If FormSubmit is unavailable, the form opens a pre-filled `mailto:` message as a fallback.
+via [FormSubmit](https://formsubmit.co). The visitor stays on the website (no mailto / email-app redirect).
 
 **Important:** The first successful FormSubmit delivery triggers an activation email to that inbox. Confirm it once so future leads arrive automatically.
 

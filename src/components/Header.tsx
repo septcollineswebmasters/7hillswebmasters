@@ -26,13 +26,13 @@ export function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "border-b border-line bg-paper/90 backdrop-blur-md"
+          ? "border-b-2 border-[rgba(255,90,60,0.18)] bg-[#fff7f0]/92 backdrop-blur-md"
           : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
         <a href="#top" className="focus-ring group flex items-center gap-2.5">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-teal text-sm font-bold text-white">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-coral via-amber to-gold text-sm font-bold text-white shadow-[0_8px_20px_rgba(255,90,60,0.35)]">
             7
           </span>
           <span className="font-display text-lg font-semibold tracking-tight text-ink md:text-xl">
@@ -40,12 +40,12 @@ export function Header() {
           </span>
         </a>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
           {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="focus-ring text-sm font-medium text-ink-soft transition-colors hover:text-teal"
+              className="focus-ring text-sm font-semibold text-ink-soft transition-colors hover:text-coral"
             >
               {link.label}
             </a>
@@ -63,7 +63,7 @@ export function Header() {
 
         <button
           type="button"
-          className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white/70 lg:hidden"
+          className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-line bg-white/80 lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -85,14 +85,14 @@ export function Header() {
       {open && (
         <div
           id="mobile-nav"
-          className="border-t border-line bg-paper/95 px-5 py-4 backdrop-blur-md lg:hidden"
+          className="border-t-2 border-[rgba(255,90,60,0.18)] bg-[#fff7f0]/97 px-5 py-4 backdrop-blur-md lg:hidden"
         >
           <nav className="flex flex-col gap-3" aria-label="Mobile">
             {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="focus-ring rounded-lg px-2 py-2 text-base font-medium text-ink"
+                className="focus-ring rounded-lg px-2 py-2 text-base font-semibold text-ink"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
