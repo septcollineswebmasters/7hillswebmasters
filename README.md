@@ -19,11 +19,13 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Lead delivery
 
-Forms POST to `/api/lead`, which forwards submissions through [FormSubmit](https://formsubmit.co) to:
+Contact and Schedule a Call forms send to:
 
 `septcollineswebmasters@gmail.com`
 
-**Important:** The first submission triggers a FormSubmit activation email to that inbox. Confirm it once so future leads arrive automatically.
+Delivery uses [FormSubmit](https://formsubmit.co) from the browser. If FormSubmit is unavailable, the form opens a pre-filled `mailto:` message as a fallback.
+
+**Important:** The first successful FormSubmit delivery triggers an activation email to that inbox. Confirm it once so future leads arrive automatically.
 
 ## Deploy
 

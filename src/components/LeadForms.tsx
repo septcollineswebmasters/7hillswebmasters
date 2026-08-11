@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { siteConfig } from "@/lib/site";
 
 type FormKind = "contact" | "schedule";
-
 type Status = "idle" | "loading" | "success" | "error";
 
 const services = [
@@ -17,6 +17,87 @@ const services = [
   "Other / Not sure",
 ];
 
+function buildMailBody(kind: FormKind, data: Record<string, string>) {
+  const lines = [
+    `Lead type: ${kind === "schedule" ? "Schedule a call" : "Contact form"}`,
+    `Name: ${data.name || ""}`,
+    `Email: ${data.email || ""}`,
+    `Company: ${data.company || "—"}`,
+    `Website: ${data.website || "—"}`,
+    `Service: ${data.service || "—"}`,
+    kind === "schedule"
+      ? `Preferred: ${data.preferredDate || ""} ${data.preferredTime || ""} (${data.timezone || ""})`
+      : null,
+    "",
+    "Message:",
+    data.message || "",
+  ].filter((line): line is string => Boolean(line));
+
+  return lines.join("\n");
+}
+
+async function deliverLead(kind: FormKind, data: Record<string, string>) {
+  const subject =
+    kind === "schedule"
+      ? `Schedule a call — ${data.name}`
+      : `New lead — ${data.service || "General"} — ${data.name}`;
+
+  const payload = {
+    name: data.name,
+    email: data.email,
+    _subject: subject,
+    _template: "table",
+    _replyto: data.email,
+    _captcha: "false",
+    company: data.company || "",
+    website: data.website || "",
+    service: data.service || "",
+    preferredDate: data.preferredDate || "",
+    preferredTime: data.preferredTime || "",
+    timezone: data.timezone || "",
+    message: buildMailBody(kind, data),
+  };
+
+  // Prefer browser → FormSubmit (server-side is often blocked by Cloudflare)
+  const response = await fetch(
+    `https://formsubmit.co/ajax/${encodeURIComponent(siteConfig.email)}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("formsubmit_failed");
+  }
+
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    const json = (await response.json()) as { success?: string | boolean };
+    if (!json.success && json.success !== "true") {
+      throw new Error("formsubmit_failed");
+    }
+  } else {
+    // Cloudflare challenge HTML or unexpected payload
+    throw new Error("formsubmit_failed");
+  }
+}
+
+function openMailtoFallback(kind: FormKind, data: Record<string, string>) {
+  const subject =
+    kind === "schedule"
+      ? `Schedule a call — ${data.name}`
+      : `New lead — ${data.service || "General"} — ${data.name}`;
+  const href = `mailto:${siteConfig.email}?subject=${encodeURIComponent(
+    subject
+  )}&body=${encodeURIComponent(buildMailBody(kind, data))}`;
+  window.location.href = href;
+}
+
 export function LeadForms() {
   const [contactStatus, setContactStatus] = useState<Status>("idle");
   const [scheduleStatus, setScheduleStatus] = useState<Status>("idle");
@@ -26,8 +107,12 @@ export function LeadForms() {
   async function submit(kind: FormKind, event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const data = new FormData(form);
-    const payload = Object.fromEntries(data.entries());
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries()) as Record<string, string>;
+
+    if (data.website_url) {
+      return;
+    }
 
     if (kind === "contact") {
       setContactStatus("loading");
@@ -38,22 +123,12 @@ export function LeadForms() {
     }
 
     try {
-      const res = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ kind, ...payload }),
-      });
-      const json = (await res.json()) as { ok?: boolean; error?: string };
-
-      if (!res.ok || !json.ok) {
-        throw new Error(json.error || "Unable to send right now.");
-      }
-
+      await deliverLead(kind, data);
       form.reset();
       if (kind === "contact") {
         setContactStatus("success");
         setContactMessage(
-          "Thanks—your message is on its way. We’ll reply at your email shortly."
+          "Thanks—your message was sent. We’ll reply at your email shortly."
         );
       } else {
         setScheduleStatus("success");
@@ -61,17 +136,18 @@ export function LeadForms() {
           "Request received. We’ll confirm your call time by email within one business day."
         );
       }
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please email us directly.";
+    } catch {
+      openMailtoFallback(kind, data);
       if (kind === "contact") {
-        setContactStatus("error");
-        setContactMessage(message);
+        setContactStatus("success");
+        setContactMessage(
+          `Opened your email app to reach ${siteConfig.email}. If it didn’t open, email us directly.`
+        );
       } else {
-        setScheduleStatus("error");
-        setScheduleMessage(message);
+        setScheduleStatus("success");
+        setScheduleMessage(
+          `Opened your email app to book with ${siteConfig.email}. If it didn’t open, email us directly.`
+        );
       }
     }
   }
@@ -86,16 +162,19 @@ export function LeadForms() {
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-teal">
           Contact
         </p>
-        <h2 id="contact-heading" className="font-display mt-2 text-3xl font-semibold text-ink md:text-4xl">
+        <h2
+          id="contact-heading"
+          className="font-display mt-2 text-3xl font-semibold text-ink md:text-4xl"
+        >
           Tell us what you need tracked
         </h2>
         <p className="mt-3 text-ink-soft">
           Leads go straight to{" "}
           <a
             className="font-medium text-teal underline-offset-2 hover:underline"
-            href="mailto:septcollineswebmasters@gmail.com"
+            href={`mailto:${siteConfig.email}`}
           >
-            septcollineswebmasters@gmail.com
+            {siteConfig.email}
           </a>
           . Expect a clear scope and the best price for the work.
         </p>
@@ -148,7 +227,11 @@ export function LeadForms() {
           </div>
           <label className="block text-sm font-medium text-ink">
             Service interest
-            <select className="input-field mt-1.5" name="service" defaultValue="Tracking Audit">
+            <select
+              className="input-field mt-1.5"
+              name="service"
+              defaultValue="Tracking Audit"
+            >
               {services.map((service) => (
                 <option key={service} value={service}>
                   {service}
@@ -165,7 +248,13 @@ export function LeadForms() {
               placeholder="Share your stack, current issues, and goals…"
             />
           </label>
-          <input type="text" name="website_url" className="hidden" tabIndex={-1} autoComplete="off" />
+          <input
+            type="text"
+            name="website_url"
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+          />
           <button
             type="submit"
             className="btn-primary focus-ring w-full sm:w-auto"
@@ -194,7 +283,10 @@ export function LeadForms() {
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-soft">
           Schedule a call
         </p>
-        <h2 id="schedule-heading" className="font-display mt-2 text-3xl font-semibold md:text-4xl">
+        <h2
+          id="schedule-heading"
+          className="font-display mt-2 text-3xl font-semibold md:text-4xl"
+        >
           Book a discovery call
         </h2>
         <p className="mt-3 text-white/75">
@@ -278,7 +370,13 @@ export function LeadForms() {
               placeholder="Audit, GTM cleanup, new pixel setup…"
             />
           </label>
-          <input type="text" name="website_url" className="hidden" tabIndex={-1} autoComplete="off" />
+          <input
+            type="text"
+            name="website_url"
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+          />
           <button
             type="submit"
             className="inline-flex w-full items-center justify-center rounded-full bg-white px-5 py-3 font-semibold text-ink transition hover:bg-teal-soft sm:w-auto"
