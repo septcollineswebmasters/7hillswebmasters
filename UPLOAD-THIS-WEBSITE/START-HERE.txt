@@ -1,0 +1,68 @@
+========================================
+  HOW TO USE THESE FILES (VERY SIMPLE)
+========================================
+
+This folder is your complete website.
+You do NOT need GitHub, command prompts, or any installation.
+
+WHAT IS INSIDE
+--------------
+index.html     <- main website page
+css/           <- design styles
+js/            <- form + menu code
+images/        <- logo
+
+
+OPTION A — Easiest: open on your computer
+-----------------------------------------
+1. Open the folder "UPLOAD-THIS-WEBSITE"
+2. Double-click "index.html"
+3. It opens in your browser so you can preview it
+
+
+OPTION B — Put it on the internet (recommended)
+-----------------------------------------------
+Use any website host that lets you upload files, for example:
+- Hostinger
+- GoDaddy
+- Bluehost
+- SiteGround
+- Namecheap
+- Netlify Drop (https://app.netlify.com/drop)  <-- very easy, drag & drop
+
+Steps (same idea on most hosts):
+1. Log in to your hosting account
+2. Open File Manager (or drag-and-drop upload)
+3. Go to the public folder (often called "public_html" or "www")
+4. Upload EVERYTHING inside UPLOAD-THIS-WEBSITE:
+     - index.html
+     - css folder
+     - js folder
+     - images folder
+5. Visit your domain name
+6. Your website should appear
+
+
+OPTION C — Free & fast with Netlify Drop
+----------------------------------------
+1. Go to: https://app.netlify.com/drop
+2. Drag the whole "UPLOAD-THIS-WEBSITE" folder onto the page
+3. Netlify gives you a live website link in seconds
+4. Later you can connect your own domain (like 7hillswebmasters.com)
+
+
+CONTACT FORM SETUP (important — one time only)
+----------------------------------------------
+Forms send leads to: septcollineswebmasters@gmail.com
+
+1. Open your live website
+2. Submit one test message from the Contact form
+3. Check Gmail for an email from FormSubmit
+4. Click the confirmation / activation link once
+5. After that, all future leads arrive in your Gmail automatically
+
+
+NEED HELP?
+----------
+There is nothing to install and no coding required.
+Just upload this folder and you are done.
