@@ -1,0 +1,36 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Directory URLs already work via index.html folders.
+# Optional pretty fallback if a file is requested without a trailing slash.
+[[redirects]]
+  from = "/services"
+  to = "/services/"
+  status = 301
+[[redirects]]
+  from = "/about"
+  to = "/about/"
+  status = 301
+[[redirects]]
+  from = "/contact"
+  to = "/contact/"
+  status = 301
+[[redirects]]
+  from = "/schedule"
+  to = "/schedule/"
+  status = 301
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy/"
+  status = 301
+[[redirects]]
+  from = "/terms"
+  to = "/terms/"
+  status = 301
