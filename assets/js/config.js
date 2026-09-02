@@ -1,21 +1,18 @@
 /**
  * 7 Hills Webmasters — site configuration
- * Replace the placeholders below before going live.
+ *
+ * Public display email: hello@7hillswebmasters.com
+ * Form submissions are delivered to septcollineswebmasters@gmail.com
  */
 window.SITE_CONFIG = {
-  // Public site URL used in canonical tags, sitemap, and Open Graph (no trailing slash)
   siteUrl: "https://7hillswebmasters.com",
 
-  // Formspree: create a form at https://formspree.io that delivers to
-  // septcollineswebmasters@gmail.com, then paste the endpoint here.
-  // Example: "https://formspree.io/f/abcdefgh"
-  formEndpoint: "https://formspree.io/f/YOUR_FORM_ID",
+  // FormSubmit delivers POSTs to the operations inbox (not shown on the site).
+  formEndpoint: "https://formsubmit.co/ajax/septcollineswebmasters@gmail.com",
+  formNotifyEmail: "septcollineswebmasters@gmail.com",
 
-  // Calendly booking page. Replace with your real event URL.
-  // Example: "https://calendly.com/your-handle/strategy-call"
-  calendlyUrl: "https://calendly.com/your-calendly-link",
+  calendlyUrl: "https://calendly.com/septcollineswebmasters",
 
-  contactEmail: "septcollineswebmasters@gmail.com",
-  contactPhone: "+91 8197282499",
-  contactPhoneHref: "tel:+918197282499"
+  displayEmail: "hello@7hillswebmasters.com",
+  contactEmail: "hello@7hillswebmasters.com"
 };

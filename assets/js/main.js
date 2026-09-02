@@ -2,6 +2,7 @@
   "use strict";
 
   var config = window.SITE_CONFIG || {};
+  var displayEmail = config.displayEmail || "hello@7hillswebmasters.com";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
@@ -11,7 +12,6 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
 
-  /* ---- Header: mobile nav + scrolled state ---- */
   var header = qs("[data-header]");
   var toggle = qs("[data-nav-toggle]");
   var nav = qs("[data-nav]");
@@ -40,7 +40,6 @@
     });
   }
 
-  /* ---- Active nav link ---- */
   var path = window.location.pathname.replace(/\/+$/, "") || "/";
   qsa("[data-nav] a[data-nav-match]").forEach(function (link) {
     var match = link.getAttribute("data-nav-match");
@@ -51,7 +50,6 @@
     }
   });
 
-  /* ---- Reveal on scroll ---- */
   var revealEls = qsa("[data-reveal]");
   if ("IntersectionObserver" in window && revealEls.length) {
     var io = new IntersectionObserver(
@@ -74,7 +72,6 @@
     });
   }
 
-  /* ---- FAQ accordion ---- */
   qsa("[data-faq]").forEach(function (item) {
     var btn = qs("button", item);
     var panel = qs(".faq-panel", item);
@@ -93,24 +90,13 @@
     });
   });
 
-  /* ---- Contact form ---- */
-  var form = qs("[data-contact-form]");
-  if (form) {
-    var status = qs("[data-form-status]");
-    var success = qs("[data-form-success]");
+  function bindForm(form) {
+    var wrap = form.closest("[data-form-wrap]") || form.parentElement;
+    var status = qs("[data-form-status]", wrap);
+    var success = qs("[data-form-success]", wrap);
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var endpoint = config.formEndpoint || form.getAttribute("action");
-      if (!endpoint || endpoint.indexOf("YOUR_FORM_ID") !== -1) {
-        if (status) {
-          status.hidden = false;
-          status.className = "form-status is-error";
-          status.textContent =
-            "Form endpoint is not configured yet. Add your Formspree URL in assets/js/config.js.";
-        }
-        return;
-      }
-
       var submitBtn = qs("[type='submit']", form);
       if (submitBtn) submitBtn.disabled = true;
       if (status) {
@@ -120,13 +106,29 @@
       }
 
       var data = new FormData(form);
+      data.append("_subject", "New enquiry — 7 Hills Webmasters");
+      data.append("_template", "table");
+      data.append("_captcha", "false");
+
       fetch(endpoint, {
         method: "POST",
         body: data,
         headers: { Accept: "application/json" }
       })
         .then(function (res) {
-          if (!res.ok) throw new Error("Request failed");
+          return res.text().then(function (text) {
+            var json = {};
+            try {
+              json = JSON.parse(text);
+            } catch (err) {
+              json = {};
+            }
+            var failed =
+              !res.ok || json.success === false || json.success === "false";
+            if (failed) throw new Error((json && json.message) || "Request failed");
+          });
+        })
+        .then(function () {
           form.hidden = true;
           if (status) status.hidden = true;
           if (success) success.hidden = false;
@@ -135,16 +137,15 @@
           if (status) {
             status.className = "form-status is-error";
             status.textContent =
-              "Something went wrong. Please email us at " +
-              (config.contactEmail || "septcollineswebmasters@gmail.com") +
-              " or try again.";
+              "Something went wrong. Please email " + displayEmail + " or try again.";
           }
           if (submitBtn) submitBtn.disabled = false;
         });
     });
   }
 
-  /* ---- Calendly embed ---- */
+  qsa("[data-contact-form]").forEach(bindForm);
+
   var calRoot = qs("[data-calendly]");
   if (calRoot && config.calendlyUrl) {
     calRoot.setAttribute("data-url", config.calendlyUrl);
@@ -159,14 +160,10 @@
         });
       }
     };
-    if (window.Calendly) {
-      boot();
-    } else {
-      window.addEventListener("load", boot);
-    }
+    if (window.Calendly) boot();
+    else window.addEventListener("load", boot);
   }
 
-  /* ---- Current year ---- */
   qsa("[data-year]").forEach(function (el) {
     el.textContent = String(new Date().getFullYear());
   });
