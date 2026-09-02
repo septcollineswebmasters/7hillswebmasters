@@ -1,0 +1,26 @@
+# 7 Hills Webmasters
+
+7 Hills Webmasters is a web analytics and performance marketing agency with 10+ years of expertise. Services: GA4 implementation, Google Tag Manager, conversion tracking, Google Ads management, Google Business Profile (GMB) optimization, and Google Merchant Center / product feed optimization.
+
+Tagline: Data-Driven Growth for Modern Businesses
+
+## Contact (public NAP)
+
+- Name: 7 Hills Webmasters
+- Email: hello@7hillswebmasters.com
+- USA: WeWork, 250 Broadway, New York, NY 10007
+- India: Indiqube Ascent, Koramangala 4th Block, Bengaluru, Karnataka 560095
+- Regions: United States, India, and globally
+- Book a call: https://calendly.com/septcollineswebmasters
+
+## Services
+
+- Web analytics agency: /services/web-analytics/
+- Google Ads agency / PPC: /services/google-ads/
+- Google My Business agency / local SEO: /services/google-my-business/
+- Google Merchant Center agency: /services/google-merchant-center/
+
+## CTAs
+
+Book a call: /schedule/
+Enquiry form: available on every page (#enquire)
